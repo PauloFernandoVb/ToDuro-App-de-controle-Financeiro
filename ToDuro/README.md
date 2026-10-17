@@ -55,7 +55,7 @@ Demonstrar conhecimentos de desenvolvimento mobile com React Native, navegação
 
 ## Autores
 
-- Nivaldo Targino
+- Nivaldo Targino Lima Junior
 - Paulo Fernando Vilas Boas
 
 ## Status
