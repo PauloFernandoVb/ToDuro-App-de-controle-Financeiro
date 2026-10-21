@@ -60,13 +60,15 @@ export function Field({ label, error, right, style, ...props }) {
   );
 }
 
-export function Button({ title, onPress, variant = 'primary', style }) {
+export function Button({ title, onPress, variant = 'primary', style, disabled = false }) {
   const primary = variant === 'primary';
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.8}
-      style={[s.btn, primary ? s.btnPrimary : s.btnOutline, style]}
+      disabled={disabled}
+      activeOpacity={disabled ? 1 : 0.8}
+      accessibilityState={{ disabled }}
+      style={[s.btn, primary ? s.btnPrimary : s.btnOutline, style, disabled && { opacity: 0.6 }]}
     >
       <Text style={[s.btnTxt, primary ? { color: colors.midnight } : { color: colors.cloud }]}>{title}</Text>
     </TouchableOpacity>
