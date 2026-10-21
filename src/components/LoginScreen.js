@@ -7,6 +7,11 @@ import { colors } from '../theme';
 import { useFinance } from '../context/FinanceContext';
 import { auth, database } from '../../services/firebase.js';
 
+const {
+  loginAuthErrorMessage,
+  loginProfileErrorMessage,
+} = require('../utils/authErrors');
+
 export function LoginScreen({ navigation }) {
   const { setUsuario } = useFinance();
   const [email, setEmail] = useState('');
@@ -60,39 +65,11 @@ export function LoginScreen({ navigation }) {
       setUsuario({ nome: perfil.nome.trim().split(' ')[0], email: perfil.email.trim() });
       navigation.reset({ index: 0, routes: [{ name: 'Dashboard' }] });
     } catch (erro) {
-      if (autenticado) {
-        setMensagem(
-          erro.code === 'PERMISSION_DENIED' || erro.code === 'database/permission-denied'
-            ? 'Sua conta foi autenticada, mas o acesso ao perfil foi negado. Verifique as permissões do banco.'
-            : 'Sua conta foi autenticada, mas não foi possível carregar seu perfil. Verifique sua conexão e tente novamente.'
-        );
-      } else {
-        switch (erro.code) {
-          case 'auth/invalid-credential':
-          case 'auth/invalid-login-credentials':
-          case 'auth/wrong-password':
-          case 'auth/user-not-found':
-            setMensagem('E-mail ou senha incorretos.');
-            break;
-          case 'auth/user-disabled':
-            setMensagem('Esta conta foi desativada. Entre em contato com o suporte.');
-            break;
-          case 'auth/too-many-requests':
-            setMensagem('Muitas tentativas de login. Aguarde um pouco e tente novamente.');
-            break;
-          case 'auth/network-request-failed':
-            setMensagem('Não foi possível conectar ao serviço. Verifique sua conexão com a internet.');
-            break;
-          case 'auth/invalid-email':
-            setMensagem('O e-mail informado é inválido.');
-            break;
-          case 'auth/operation-not-allowed':
-            setMensagem('O login por e-mail e senha não está habilitado. Entre em contato com o suporte.');
-            break;
-          default:
-            setMensagem('Não foi possível entrar. Tente novamente.');
-        }
-      }
+      setMensagem(
+        autenticado
+          ? loginProfileErrorMessage(erro.code)
+          : loginAuthErrorMessage(erro.code)
+      );
     } finally {
       envioEmAndamento.current = false;
       setCarregando(false);
