@@ -10,6 +10,11 @@ import { colors } from '../theme';
 import { useFinance } from '../context/FinanceContext';
 import { auth, database } from '../../services/firebase.js';
 
+const {
+  registrationAuthErrorMessage,
+  registrationProfileErrorMessage,
+} = require('../utils/authErrors');
+
 export function CadastroScreen({ navigation }) {
   const { setUsuario } = useFinance();
 
@@ -80,24 +85,10 @@ export function CadastroScreen({ navigation }) {
           f.senha
         );
       } catch (erro) {
-        let mensagem = 'Não foi possível criar sua conta. Tente novamente.';
-
-        switch (erro.code) {
-          case 'auth/email-already-in-use':
-            mensagem = 'Este e-mail já está cadastrado.';
-            break;
-          case 'auth/invalid-email':
-            mensagem = 'O e-mail informado é inválido.';
-            break;
-          case 'auth/weak-password':
-            mensagem = 'Escolha uma senha mais forte.';
-            break;
-          case 'auth/network-request-failed':
-            mensagem = 'Verifique sua conexão com a internet e tente novamente.';
-            break;
-        }
-
-        setFeedback({ type: 'error', message: mensagem });
+        setFeedback({
+          type: 'error',
+          message: registrationAuthErrorMessage(erro.code),
+        });
         return;
       }
 
@@ -110,13 +101,9 @@ export function CadastroScreen({ navigation }) {
           criadoEm: new Date().toISOString(),
         });
       } catch (erro) {
-        const detalhe = erro.code === 'PERMISSION_DENIED'
-          || erro.code === 'database/permission-denied'
-          ? 'O acesso ao Realtime Database foi negado; verifique as regras do banco.'
-          : 'Não foi possível gravar o perfil no Realtime Database. Verifique sua conexão e as permissões do banco.';
         setFeedback({
           type: 'error',
-          message: `A conta foi criada, mas o perfil não foi salvo. ${detalhe} Não tente criar a conta novamente; acesse o login ou contate o suporte.`,
+          message: registrationProfileErrorMessage(erro.code),
         });
         return;
       }
