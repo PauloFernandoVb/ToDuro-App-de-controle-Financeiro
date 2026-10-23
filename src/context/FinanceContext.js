@@ -1,40 +1,140 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
-import { chaveData } from '../theme';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import {
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+  update,
+} from 'firebase/database';
+import { auth, database } from '../../services/firebase.js';
+const {
+  calcularTotais,
+  caminhoTransacoesDoUsuario,
+  normalizarTransacoes,
+  ordenarTransacoes,
+} = require('../utils/financeData');
 
 const FinanceContext = createContext(null);
 
-const DADOS_INICIAIS = [
-  { id: 1, tipo: 'receita', descricao: 'Salário mensal', valor: 4200, categoria: 'Salário', data: '05/10/2026', obs: '' },
-  { id: 2, tipo: 'despesa', descricao: 'Aluguel', valor: 1350, categoria: 'Moradia', data: '06/10/2026', obs: 'Venc. dia 6' },
-  { id: 3, tipo: 'despesa', descricao: 'Supermercado', valor: 482.9, categoria: 'Alimentação', data: '09/10/2026', obs: '' },
-  { id: 4, tipo: 'receita', descricao: 'Projeto de site', valor: 900, categoria: 'Freelance', data: '12/10/2026', obs: 'Cliente Sorelle' },
-  { id: 5, tipo: 'despesa', descricao: 'Metrô e ônibus', valor: 145, categoria: 'Transporte', data: '14/10/2026', obs: '' },
-  { id: 6, tipo: 'despesa', descricao: 'Cinema', valor: 64, categoria: 'Lazer', data: '16/10/2026', obs: '' },
-  { id: 7, tipo: 'receita', descricao: 'Rendimento CDB', valor: 87.35, categoria: 'Investimentos', data: '17/10/2026', obs: '' },
-  { id: 8, tipo: 'despesa', descricao: 'Consulta médica', valor: 220, categoria: 'Saúde', data: '18/10/2026', obs: '' },
-];
-
 export function FinanceProvider({ children }) {
-  const [transacoes, setTransacoes] = useState(DADOS_INICIAIS);
+  const [transacoes, setTransacoes] = useState([]);
   const [usuario, setUsuario] = useState({ nome: 'Visitante', email: '' });
+  const [carregandoTransacoes, setCarregandoTransacoes] = useState(true);
+  const [erroTransacoes, setErroTransacoes] = useState('');
 
-  const ordenadas = useMemo(
-    () => [...transacoes].sort((a, b) => chaveData(b.data).localeCompare(chaveData(a.data)) || b.id - a.id),
-    [transacoes]
-  );
+  useEffect(() => {
+    let pararDeOuvirTransacoes;
 
-  const totais = useMemo(() => {
-    const receitas = transacoes.filter((t) => t.tipo === 'receita').reduce((s, t) => s + t.valor, 0);
-    const despesas = transacoes.filter((t) => t.tipo === 'despesa').reduce((s, t) => s + t.valor, 0);
-    return { receitas, despesas, saldo: receitas - despesas };
-  }, [transacoes]);
+    const pararDeOuvirAutenticacao = onAuthStateChanged(
+      auth,
+      (usuarioAutenticado) => {
+        pararDeOuvirTransacoes?.();
+        pararDeOuvirTransacoes = undefined;
+        setTransacoes([]);
+        setErroTransacoes('');
 
-  const adicionar = (t) => setTransacoes((lista) => [...lista, { ...t, id: Date.now() }]);
-  const atualizar = (id, dados) =>
-    setTransacoes((lista) => lista.map((t) => (t.id === id ? { ...t, ...dados } : t)));
-  const remover = (id) => setTransacoes((lista) => lista.filter((t) => t.id !== id));
+        if (!usuarioAutenticado) {
+          setUsuario({ nome: 'Visitante', email: '' });
+          setCarregandoTransacoes(false);
+          return;
+        }
 
-  const value = { transacoes: ordenadas, totais, usuario, setUsuario, adicionar, atualizar, remover };
+        const uid = usuarioAutenticado.uid;
+        setCarregandoTransacoes(true);
+        pararDeOuvirTransacoes = onValue(
+          ref(database, `usuarios/${uid}/transacoes`),
+          (snapshot) => {
+            if (auth.currentUser?.uid !== uid) return;
+
+            try {
+              setTransacoes(normalizarTransacoes(snapshot.val()));
+              setErroTransacoes('');
+              setCarregandoTransacoes(false);
+            } catch {
+              setTransacoes([]);
+              setErroTransacoes(
+                'Há movimentações com dados inválidos no banco. Corrija esses registros para exibir o resumo.'
+              );
+              setCarregandoTransacoes(false);
+            }
+          },
+          (erro) => {
+            if (auth.currentUser?.uid !== uid) return;
+
+            setTransacoes([]);
+            setErroTransacoes(
+              erro.code === 'PERMISSION_DENIED'
+                ? 'O acesso às movimentações foi negado. Verifique as regras do Realtime Database.'
+                : 'Não foi possível atualizar as movimentações. Verifique sua conexão e tente novamente.'
+            );
+            setCarregandoTransacoes(false);
+          }
+        );
+      },
+      () => {
+        setTransacoes([]);
+        setCarregandoTransacoes(false);
+        setErroTransacoes('Não foi possível verificar a sessão. Entre novamente.');
+      }
+    );
+
+    return () => {
+      pararDeOuvirAutenticacao();
+      pararDeOuvirTransacoes?.();
+    };
+  }, []);
+
+  const ordenadas = useMemo(() => ordenarTransacoes(transacoes), [transacoes]);
+
+  const totais = useMemo(() => calcularTotais(transacoes), [transacoes]);
+
+  const adicionar = async (transacao) => {
+    const novoRef = push(
+      ref(database, caminhoTransacoesDoUsuario(auth.currentUser?.uid))
+    );
+    if (!novoRef.key) {
+      throw new Error('Não foi possível gerar um identificador para a movimentação.');
+    }
+
+    await set(novoRef, transacao);
+    return novoRef.key;
+  };
+
+  const atualizar = async (id, dados) => {
+    await update(
+      ref(
+        database,
+        caminhoTransacoesDoUsuario(auth.currentUser?.uid, id)
+      ),
+      dados
+    );
+  };
+
+  const remover = async (id) => {
+    await remove(
+      ref(
+        database,
+        caminhoTransacoesDoUsuario(auth.currentUser?.uid, id)
+      )
+    );
+  };
+
+  const sair = () => signOut(auth);
+
+  const value = {
+    transacoes: ordenadas,
+    totais,
+    usuario,
+    setUsuario,
+    carregandoTransacoes,
+    erroTransacoes,
+    adicionar,
+    atualizar,
+    remover,
+    sair,
+  };
   return <FinanceContext.Provider value={value}>{children}</FinanceContext.Provider>;
 }
 

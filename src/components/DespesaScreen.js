@@ -8,6 +8,8 @@ export function DespesaScreen({ navigation }) {
     <MovimentoForm
       navigation={navigation} tipo="despesa" titulo="↓ Nova despesa" subtitulo="Registre uma saída de dinheiro"
       onSalvar={adicionar} mensagemSucesso="Despesa cadastrada e saldo atualizado."
+      rotaAposSalvar="Dashboard"
+      rotaAoCancelar="Dashboard"
     />
   );
 }

@@ -15,6 +15,18 @@ const {
   registrationProfileErrorMessage,
 } = require('../utils/authErrors');
 
+const formatPhone = (value) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (!digits) return '';
+  if (digits.length <= 2) return `(${digits}`;
+
+  const ddd = digits.slice(0, 2);
+  const numero = digits.slice(2);
+  if (numero.length <= 5) return `(${ddd}) ${numero}`;
+
+  return `(${ddd}) ${numero.slice(0, 5)}-${numero.slice(5)}`;
+};
+
 export function CadastroScreen({ navigation }) {
   const { setUsuario } = useFinance();
 
@@ -46,8 +58,8 @@ export function CadastroScreen({ navigation }) {
       e.nome = 'Informe seu nome completo.';
     }
 
-    if (f.telefone.replace(/\D/g, '').length < 10) {
-      e.telefone = 'Informe um telefone com DDD.';
+    if (f.telefone.replace(/\D/g, '').length !== 11) {
+      e.telefone = 'Informe um celular com DDD e 11 dígitos.';
     }
 
     if (!f.email.trim()) {
@@ -148,9 +160,9 @@ export function CadastroScreen({ navigation }) {
 
       <Field
         label="Telefone"
-        placeholder="(11) 99999-9999"
+        placeholder="(18) 99999-9999"
         value={f.telefone}
-        onChangeText={set('telefone')}
+        onChangeText={(telefone) => set('telefone')(formatPhone(telefone))}
         keyboardType="phone-pad"
         editable={!carregando && !concluido}
         error={erros.telefone}

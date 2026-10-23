@@ -12,7 +12,6 @@ import { CotacaoScreen } from './src/components/CotacaoScreen.js';
 import { FinanceProvider } from './src/context/FinanceContext.js';
 import { colors } from './src/theme.js';
 
-//STACK NAVIGATOR
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';

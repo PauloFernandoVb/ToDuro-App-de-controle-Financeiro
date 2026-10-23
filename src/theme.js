@@ -1,4 +1,6 @@
 // Paleta oficial do toDuro
+const { dataValida, chaveData } = require('./utils/financeData');
+
 export const colors = {
   midnight: '#0B1220', // fundo principal
   mint: '#20D6A0', // ações e destaques
@@ -24,19 +26,7 @@ export const parseValor = (texto) => {
   return parseFloat(t);
 };
 
-// "dd/mm/aaaa" válido?
-export const dataValida = (texto) => {
-  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(texto || '');
-  if (!m) return false;
-  const [, d, mes, a] = m.map(Number);
-  const dt = new Date(a, mes - 1, d);
-  return dt.getFullYear() === a && dt.getMonth() === mes - 1 && dt.getDate() === d;
-};
-
-export const chaveData = (texto) => {
-  const [d, m, a] = texto.split('/');
-  return `${a}${m}${d}`;
-};
+export { dataValida, chaveData };
 
 export const hojeBR = () => {
   const d = new Date();
