@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { Alert, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Screen, Header, Card, Field, Chips, Button, BottomNav } from './ui';
+import { Screen, Header, Card, Field, Chips, Button, BottomNav, Banner } from './ui';
 import { colors, formatBRL } from '../theme';
 import { useFinance } from '../context/FinanceContext';
 
 const FILTROS = ['Todas', 'Receitas', 'Despesas'];
 
 export function HistoricoScreen({ navigation }) {
-  const { transacoes, remover } = useFinance();
+  const {
+    transacoes,
+    remover,
+    carregandoTransacoes,
+    erroTransacoes,
+  } = useFinance();
   const [filtro, setFiltro] = useState('Todas');
   const [busca, setBusca] = useState('');
+  const [erroExclusao, setErroExclusao] = useState('');
 
   const lista = transacoes.filter((t) => {
     if (filtro === 'Receitas' && t.tipo !== 'receita') return false;
@@ -17,15 +23,38 @@ export function HistoricoScreen({ navigation }) {
     return t.descricao.toLowerCase().includes(busca.trim().toLowerCase());
   });
 
+  const excluir = async (t) => {
+    setErroExclusao('');
+    try {
+      await remover(t.id);
+    } catch (erro) {
+      setErroExclusao(
+        erro.code === 'PERMISSION_DENIED'
+          ? 'O acesso foi negado. Verifique as regras do Realtime Database.'
+          : 'Não foi possível excluir a movimentação. Verifique sua conexão e tente novamente.'
+      );
+    }
+  };
+
   const confirmarExclusao = (t) =>
     Alert.alert('Excluir movimentação', `Deseja excluir "${t.descricao}" (${formatBRL(t.valor)})? Essa ação não pode ser desfeita.`, [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Excluir', style: 'destructive', onPress: () => remover(t.id) },
+      { text: 'Excluir', style: 'destructive', onPress: () => excluir(t) },
     ]);
 
   return (
     <Screen footer={<BottomNav navigation={navigation} active="Historico" />}>
-      <Header title="Histórico" subtitle={`${lista.length} movimentação(ões)`} />
+      <Header
+        title="Histórico"
+        subtitle={
+          carregandoTransacoes
+            ? 'Carregando movimentações...'
+            : erroTransacoes
+              ? 'Movimentações indisponíveis'
+              : `${lista.length} movimentação(ões)`
+        }
+      />
+      <Banner type="error" message={erroExclusao || erroTransacoes} />
 
       <Field label="Buscar por descrição" placeholder="Ex.: mercado" value={busca} onChangeText={setBusca} />
       <View style={{ marginBottom: 16 }}>
@@ -37,7 +66,17 @@ export function HistoricoScreen({ navigation }) {
         <Button title="↓ Nova despesa" variant="outline" onPress={() => navigation.navigate('Despesa')} style={{ flex: 1 }} />
       </View>
 
-      {lista.length === 0 ? (
+      {carregandoTransacoes ? (
+        <Card style={{ marginTop: 16, alignItems: 'center', padding: 24 }}>
+          <Text style={{ color: colors.muted }}>Carregando movimentações...</Text>
+        </Card>
+      ) : erroTransacoes ? (
+        <Card style={{ marginTop: 16, alignItems: 'center', padding: 24 }}>
+          <Text style={{ color: colors.muted, textAlign: 'center' }}>
+            Não foi possível carregar o histórico. Corrija o acesso ao banco e tente novamente.
+          </Text>
+        </Card>
+      ) : lista.length === 0 ? (
         <Card style={{ marginTop: 16, alignItems: 'center', padding: 24 }}>
           <Text style={{ color: colors.cloud, fontWeight: '700', fontSize: 16 }}>Nada por aqui</Text>
           <Text style={{ color: colors.muted, marginTop: 6, textAlign: 'center' }}>

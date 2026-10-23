@@ -8,6 +8,8 @@ export function ReceitaScreen({ navigation }) {
     <MovimentoForm
       navigation={navigation} tipo="receita" titulo="↑ Nova receita" subtitulo="Registre uma entrada de dinheiro"
       onSalvar={adicionar} mensagemSucesso="Receita cadastrada e saldo atualizado."
+      rotaAposSalvar="Dashboard"
+      rotaAoCancelar="Dashboard"
     />
   );
 }
