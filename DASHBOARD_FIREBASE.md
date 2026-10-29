@@ -58,7 +58,7 @@ Este arquivo apenas documenta uma proposta; as regras do Firebase **não foram a
 
 ## Testes automatizados
 
-Execute `npm test` para rodar os testes da aplicação. `tests/financeData.test.js` cobre a normalização dos registros recebidos do banco, a rejeição de dados inválidos, os totais/saldo, a ordenação das movimentações recentes e a construção do caminho por UID. Os testes são unitários e não substituem o teste de integração com Firebase descrito acima.
+Execute `npm test` para rodar os testes da aplicação. `tests/authFinance.test.js` cobre a normalização dos registros recebidos do banco, a rejeição de dados inválidos, os totais/saldo — incluindo os cenários da RF_09 —, a ordenação das movimentações recentes e a construção do caminho por UID. Os testes são unitários e não substituem o teste de integração com Firebase descrito acima.
 
 ## Observações
 
