@@ -23,7 +23,7 @@ usuarios/
         obs: ""
 ```
 
-O UID não vem de campo do formulário: a aplicação obtém o UID da sessão atual do Firebase Authentication e usa esse UID para ler e gravar os dados. O Firebase Realtime Database mantém um listener em `usuarios/{uid}/transacoes`; assim, inclusões, edições e exclusões atualizam o Dashboard e o histórico. O saldo é a soma das receitas menos a soma das despesas.
+O UID não vem de campo do formulário: a aplicação obtém o UID da sessão atual do Firebase Authentication e usa esse UID para ler e gravar os dados. O Firebase Realtime Database mantém um listener em `usuarios/{uid}/transacoes`; assim, inclusões, edições e exclusões atualizam o Dashboard e o histórico. O saldo é a soma das receitas menos a soma das despesas. As categorias pessoais são mantidas em `usuarios/{uid}/categorias`, separadas entre receitas e despesas.
 
 ## Configuração e regras de segurança
 
@@ -51,10 +51,11 @@ Este arquivo apenas documenta uma proposta; as regras do Firebase **não foram a
 1. Crie ou use uma conta cuja autenticação esteja habilitada e cujo perfil exista em `usuarios/{uid}`.
 2. Entre com essa conta e confira se o Dashboard mostra carregamento e, em seguida, os totais da sua pasta `transacoes`.
 3. Cadastre uma receita e uma despesa. Confirme no Console Firebase que ambas aparecem em `usuarios/{uid}/transacoes/{id}` e que saldo e totais se atualizam.
-4. Edite e exclua uma movimentação; confirme que o banco, histórico e Dashboard refletem as alterações.
-5. Entre com outra conta e confirme que ela não vê as movimentações da primeira.
-6. Use o Rules Simulator para negar leitura/escrita e confirme que o app mostra erro, sem exibir zeros como se o carregamento tivesse sido concluído com sucesso.
-7. Saia e entre novamente para confirmar que o app assina a conta certa e atualiza os dados.
+4. Cadastre e exclua categorias de receita e despesa. Confirme que aparecem em `usuarios/{uid}/categorias` e que categorias excluídas não afetam movimentações existentes.
+5. Edite e exclua uma movimentação; confirme que o banco, histórico e Dashboard refletem as alterações.
+6. Entre com outra conta e confirme que ela não vê as movimentações nem categorias da primeira.
+7. Use o Rules Simulator para negar leitura/escrita e confirme que o app mostra erro, sem exibir zeros como se o carregamento tivesse sido concluído com sucesso.
+8. Saia e entre novamente para confirmar que o app assina a conta certa e atualiza os dados.
 
 ## Testes automatizados
 

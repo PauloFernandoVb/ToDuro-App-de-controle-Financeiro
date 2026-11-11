@@ -20,6 +20,10 @@ const {
   MOEDAS_SUPORTADAS,
   buscarCotacao,
 } = require('../src/utils/exchangeRates');
+const {
+  CATEGORIAS_PADRAO,
+  normalizarCategorias,
+} = require('../src/utils/categoryData');
 
 const cadastroScreenSource = readFileSync(
   require.resolve('../src/components/CadastroScreen'),
@@ -101,6 +105,21 @@ test('registration profile-write errors explain that the auth account already ex
 
 test('exchange rate lookup accepts the currencies offered by the screen', () => {
   assert.deepEqual(MOEDAS_SUPORTADAS, ['BRL', 'USD', 'EUR', 'GBP']);
+});
+
+test('category normalization provides defaults before the user customizes lists', () => {
+  assert.deepEqual(normalizarCategorias(null), CATEGORIAS_PADRAO);
+});
+
+test('category normalization preserves customized empty lists and removes duplicate names', () => {
+  assert.deepEqual(normalizarCategorias({
+    configurado: true,
+    receita: [],
+    despesa: ['Pets', 'Pets', '  Viagem  '],
+  }), {
+    receita: [],
+    despesa: ['Pets', 'Viagem'],
+  });
 });
 
 test('exchange rate lookup returns the real API response fields', async () => {

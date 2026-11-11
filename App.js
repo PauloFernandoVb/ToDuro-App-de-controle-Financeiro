@@ -9,6 +9,7 @@ import { ReceitaScreen } from './src/components/ReceitaScreen.js';
 import { DespesaScreen } from './src/components/DespesaScreen.js';
 import { EditarScreen } from './src/components/EditarScreen.js';
 import { CotacaoScreen } from './src/components/CotacaoScreen.js';
+import { GerenciarCategoriasScreen } from './src/components/GerenciarCategoriasScreen.js';
 import { FinanceProvider } from './src/context/FinanceContext.js';
 import { colors } from './src/theme.js';
 
@@ -47,6 +48,7 @@ export default function App() {
           <MyStack.Screen name="Despesa" component={DespesaScreen} />
           <MyStack.Screen name="Editar" component={EditarScreen} />
           <MyStack.Screen name="Cotacao" component={CotacaoScreen} />
+          <MyStack.Screen name="GerenciarCategorias" component={GerenciarCategoriasScreen} />
         </MyStack.Navigator>
       </NavigationContainer>
     </FinanceProvider>

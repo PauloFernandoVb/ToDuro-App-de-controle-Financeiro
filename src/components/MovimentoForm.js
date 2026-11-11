@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { Screen, Header, Field, Chips, Button, Banner } from './ui';
-import { colors, parseValor, dataValida, hojeBR, CATEGORIAS_RECEITA, CATEGORIAS_DESPESA } from '../theme';
+import { colors, parseValor, dataValida, hojeBR } from '../theme';
+import { useFinance } from '../context/FinanceContext';
 const { formatarValorMonetario } = require('../utils/financeData');
 
 // Formulário compartilhado por Receita, Despesa e Editar
@@ -16,7 +17,8 @@ export function MovimentoForm({
   rotaAposSalvar,
   rotaAoCancelar,
 }) {
-  const categorias = tipo === 'receita' ? CATEGORIAS_RECEITA : CATEGORIAS_DESPESA;
+  const { categorias } = useFinance();
+  const opcoesCategorias = categorias[tipo];
   const [descricao, setDescricao] = useState(inicial?.descricao ?? '');
   const [valor, setValor] = useState(
     inicial ? formatarValorMonetario(String(Math.round(inicial.valor * 100))) : ''
@@ -119,7 +121,13 @@ export function MovimentoForm({
       />
 
       <Text style={{ color: colors.muted, fontSize: 13, fontWeight: '600', marginBottom: 8 }}>Categoria</Text>
-      <Chips options={categorias} value={categoria} onChange={setCategoria} />
+      <Chips options={opcoesCategorias} value={categoria} onChange={setCategoria} />
+      <Button
+        title="＋ Nova categoria"
+        variant="outline"
+        onPress={() => navigation.navigate('GerenciarCategorias', { tipo })}
+        style={{ marginTop: 10, marginBottom: 8 }}
+      />
       {erros.categoria ? <Text style={{ color: colors.cloud, fontSize: 12, marginTop: 5 }}>⚠ {erros.categoria}</Text> : null}
 
       <View style={{ height: 16 }} />

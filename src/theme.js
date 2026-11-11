@@ -1,5 +1,6 @@
 // Paleta oficial do toDuro
 const { dataValida, chaveData } = require('./utils/financeData');
+const { CATEGORIAS_RECEITA, CATEGORIAS_DESPESA } = require('./utils/categoryData');
 
 export const colors = {
   midnight: '#0B1220', // fundo principal
@@ -34,7 +35,4 @@ export const hojeBR = () => {
   return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`;
 };
 
-export const CATEGORIAS_RECEITA = ['Salário', 'Freelance', 'Investimentos', 'Outros'];
-export const CATEGORIAS_DESPESA = [
-  'Alimentação', 'Transporte', 'Moradia', 'Saúde', 'Educação', 'Lazer', 'Compras', 'Outros',
-];
+export { CATEGORIAS_RECEITA, CATEGORIAS_DESPESA };
