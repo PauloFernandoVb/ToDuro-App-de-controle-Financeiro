@@ -1,6 +1,7 @@
 const MOEDAS_SUPORTADAS = ['BRL', 'USD', 'EUR', 'GBP'];
 const API_BASE_URL = 'https://api.frankfurter.dev/v2';
 
+// Diferencia falhas de conexão, da API e de dados retornados inválidos.
 function erroCotacao(tipo, message) {
   const erro = new Error(message);
   erro.tipo = tipo;
@@ -29,6 +30,7 @@ async function buscarCotacao(origem, destino, requisitar = fetch) {
     return { base: origem, quote: destino, rate: 1, date: null };
   }
 
+  // A Frankfurter fornece a taxa de referência mais recente para o par selecionado.
   let resposta;
   try {
     resposta = await requisitar(

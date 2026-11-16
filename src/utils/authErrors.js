@@ -1,3 +1,4 @@
+// Converte códigos do Firebase Authentication em mensagens compreensíveis na tela.
 function loginAuthErrorMessage(code) {
   switch (code) {
     case 'auth/invalid-credential':
@@ -44,6 +45,7 @@ function registrationAuthErrorMessage(code) {
 }
 
 function registrationProfileErrorMessage(code) {
+  // A autenticação pode ter criado a conta mesmo quando a gravação do perfil falha.
   const detalhe = code === 'PERMISSION_DENIED' || code === 'database/permission-denied'
     ? 'O acesso ao Realtime Database foi negado; verifique as regras do banco.'
     : 'Não foi possível gravar o perfil no Realtime Database. Verifique sua conexão e as permissões do banco.';

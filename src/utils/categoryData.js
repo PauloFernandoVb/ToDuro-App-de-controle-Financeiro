@@ -8,6 +8,7 @@ const CATEGORIAS_PADRAO = {
   despesa: CATEGORIAS_DESPESA,
 };
 
+// Remove entradas vazias e duplicadas sem perder a ordem das categorias.
 function normalizarLista(lista, padrao) {
   if (!Array.isArray(lista) && (!lista || typeof lista !== 'object')) {
     return [...padrao];
@@ -28,6 +29,7 @@ function normalizarLista(lista, padrao) {
 }
 
 function normalizarCategorias(categorias) {
+  // A marca "configurado" permite que o usuário mantenha uma lista vazia intencionalmente.
   if (!categorias || typeof categorias !== 'object') {
     return {
       receita: [...CATEGORIAS_PADRAO.receita],

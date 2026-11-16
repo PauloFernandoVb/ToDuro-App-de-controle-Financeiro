@@ -4,6 +4,7 @@ import { useFinance } from '../context/FinanceContext';
 
 export function ReceitaScreen({ navigation }) {
   const { adicionar } = useFinance();
+  // Reutiliza o formulário comum, identificando o lançamento como receita.
   return (
     <MovimentoForm
       navigation={navigation} tipo="receita" titulo="↑ Nova receita" subtitulo="Registre uma entrada de dinheiro"

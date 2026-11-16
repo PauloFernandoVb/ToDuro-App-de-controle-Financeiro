@@ -22,6 +22,7 @@ export function LoginScreen({ navigation }) {
   const [carregando, setCarregando] = useState(false);
   const envioEmAndamento = useRef(false);
 
+  // Autentica o usuário e só abre o Dashboard depois de validar o perfil salvo no banco.
   const entrar = async () => {
     if (envioEmAndamento.current) return;
 

@@ -32,6 +32,7 @@ const temaToDuro = {
 };
 
 export default function App() {
+  // Mantém os dados financeiros disponíveis em todas as telas e centraliza a navegação.
   return (
     <FinanceProvider>
       <StatusBar style="light" />

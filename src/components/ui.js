@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme';
 
 export function Screen({ children, footer, scroll = true }) {
+  // Compartilha área segura, ajuste do teclado e rolagem entre as telas.
   return (
     <SafeAreaView style={s.safe}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -117,6 +118,7 @@ export function BottomNav({ navigation, active }) {
     <View style={s.nav}>
       {itens.map((i) => {
         const ativo = i.rota === active;
+        // Limpa a pilha ao trocar de seção pela navegação inferior.
         return (
           <TouchableOpacity
             key={i.rota}

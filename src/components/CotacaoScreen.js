@@ -29,6 +29,7 @@ export function CotacaoScreen({ navigation }) {
   const cotacao = carregandoCotacao ? null : resultadoConsulta.cotacao;
   const mensagemErro = carregandoCotacao ? '' : resultadoConsulta.mensagemErro;
 
+  // Atualiza a taxa ao mudar o par ou solicitar uma nova consulta.
   useEffect(() => {
     let ativa = true;
     const idSolicitacao = ++ultimaSolicitacao.current;

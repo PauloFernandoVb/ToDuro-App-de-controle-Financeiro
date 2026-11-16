@@ -22,6 +22,7 @@ export function DashboardScreen({ navigation, route }) {
   const pctDes = total ? 100 - pctRec : 0;
   const resumoDisponivel = !carregandoTransacoes && !erroTransacoes;
 
+  // Exibe por alguns segundos as mensagens recebidas após salvar ou cancelar um lançamento.
   useEffect(() => {
     const mensagem = route.params?.mensagemSucesso;
     if (!mensagem) return undefined;
@@ -56,6 +57,7 @@ export function DashboardScreen({ navigation, route }) {
     { icone: '$', nome: 'Cotação', rota: 'Cotacao' },
   ];
 
+  // Os valores e a atividade recente vêm do contexto sincronizado com o Firebase.
   return (
     <Screen footer={<BottomNav navigation={navigation} active="Dashboard" />}>
       <View style={st.topo}>

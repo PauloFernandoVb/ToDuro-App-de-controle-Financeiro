@@ -11,6 +11,7 @@ export function GerenciarCategoriasScreen({ navigation, route }) {
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
 
+  // As categorias são mantidas separadas entre receitas e despesas.
   const adicionar = async () => {
     if (salvando || carregandoCategorias) return;
     setErro('');

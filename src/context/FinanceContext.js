@@ -27,6 +27,7 @@ export function FinanceProvider({ children }) {
   const [carregandoTransacoes, setCarregandoTransacoes] = useState(true);
   const [erroTransacoes, setErroTransacoes] = useState('');
 
+  // Ao trocar a sessão, encerra os listeners antigos e acompanha apenas os dados do UID atual.
   useEffect(() => {
     let pararDeOuvirTransacoes;
     let pararDeOuvirCategorias;
@@ -111,10 +112,12 @@ export function FinanceProvider({ children }) {
     };
   }, []);
 
+  // Os totais e a lista ordenada são recalculados quando as movimentações mudam.
   const ordenadas = useMemo(() => ordenarTransacoes(transacoes), [transacoes]);
 
   const totais = useMemo(() => calcularTotais(transacoes), [transacoes]);
 
+  // As operações de escrita usam o caminho da conta autenticada.
   const adicionar = async (transacao) => {
     console.log('adicionar', transacao);
     const novoRef = push(

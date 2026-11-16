@@ -1,4 +1,5 @@
 function dataValida(texto) {
+  // Além do formato, verifica se o dia existe no mês informado.
   const partes = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(texto || '');
   if (!partes) return false;
 
@@ -29,6 +30,7 @@ function transacaoValida(transacao) {
 function normalizarTransacoes(dados) {
   if (dados === null || dados === undefined) return [];
 
+  // Dados inválidos são rejeitados para não contaminar o saldo exibido.
   if (typeof dados !== 'object' || Array.isArray(dados)) {
     throw new Error('Formato inválido de movimentações.');
   }
@@ -47,6 +49,7 @@ function normalizarTransacoes(dados) {
 }
 
 function calcularTotais(transacoes) {
+  // O saldo é a diferença entre as entradas e as saídas registradas.
   const receitas = transacoes
     .filter((transacao) => transacao.tipo === 'receita')
     .reduce((soma, transacao) => soma + transacao.valor, 0);
@@ -58,6 +61,7 @@ function calcularTotais(transacoes) {
 }
 
 function formatarValorMonetario(valor) {
+  // Trata os dígitos digitados como centavos e aplica a formatação brasileira.
   const digitos = String(valor ?? '').replace(/\D/g, '').slice(0, 15);
   if (!digitos) return '';
 
@@ -80,6 +84,7 @@ function ordenarTransacoes(transacoes) {
 }
 
 function caminhoTransacoesDoUsuario(uid, id) {
+  // Impede operações financeiras sem uma conta autenticada.
   if (typeof uid !== 'string' || !uid.trim()) {
     const erro = new Error('É necessário entrar na conta para acessar as movimentações.');
     erro.code = 'auth/no-current-user';
