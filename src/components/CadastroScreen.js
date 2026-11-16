@@ -47,6 +47,7 @@ export function CadastroScreen({ navigation }) {
   const set = (k) => (v) =>
     setF((x) => ({ ...x, [k]: v }));
 
+  // Valida os campos antes de criar a conta e gravar o perfil associado ao UID.
   const criar = async () => {
     if (envioEmAndamento.current || concluido) {
       return;

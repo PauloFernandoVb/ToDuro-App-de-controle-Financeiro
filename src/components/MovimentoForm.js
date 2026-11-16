@@ -18,6 +18,7 @@ export function MovimentoForm({
   rotaAoCancelar,
 }) {
   const { categorias } = useFinance();
+  // Um único formulário atende criação e edição de receitas e despesas.
   const opcoesCategorias = categorias[tipo];
   const [descricao, setDescricao] = useState(inicial?.descricao ?? '');
   const [valor, setValor] = useState(
@@ -31,6 +32,7 @@ export function MovimentoForm({
   const [erroSalvar, setErroSalvar] = useState('');
   const envioEmAndamento = useRef(false);
 
+  // Valida os campos e evita enviar duas gravações ao mesmo tempo.
   const salvar = async () => {
     if (envioEmAndamento.current) return;
 

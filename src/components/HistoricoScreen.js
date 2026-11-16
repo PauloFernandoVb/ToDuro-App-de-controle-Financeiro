@@ -17,6 +17,7 @@ export function HistoricoScreen({ navigation }) {
   const [busca, setBusca] = useState('');
   const [erroExclusao, setErroExclusao] = useState('');
 
+  // Aplica o tipo e a busca sobre as movimentações já carregadas pelo contexto.
   const lista = transacoes.filter((t) => {
     if (filtro === 'Receitas' && t.tipo !== 'receita') return false;
     if (filtro === 'Despesas' && t.tipo !== 'despesa') return false;
@@ -42,6 +43,7 @@ export function HistoricoScreen({ navigation }) {
       { text: 'Excluir', style: 'destructive', onPress: () => excluir(t) },
     ]);
 
+  // A lista permite consultar, editar e excluir cada movimentação.
   return (
     <Screen footer={<BottomNav navigation={navigation} active="Historico" />}>
       <Header

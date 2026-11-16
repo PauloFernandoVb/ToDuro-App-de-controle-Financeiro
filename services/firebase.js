@@ -2,6 +2,7 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
+// Configuração do projeto Firebase usado para autenticação e armazenamento.
 const firebaseConfig = {
   apiKey: "AIzaSyALKQQlB_dOsJ9SfaF-elYdKaP43APcJqk",
   authDomain: "toduro-ab5b2.firebaseapp.com",
@@ -23,6 +24,7 @@ const firebaseConfig = {
 //   //measurementId: "G-KJ8DK5B19P"
 // };
 
+// Reutiliza a instância existente para evitar inicializar o Firebase mais de uma vez.
 const app = getApps().length === 0
   ? initializeApp(firebaseConfig)
   : getApp();

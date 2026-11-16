@@ -13,6 +13,7 @@ export const colors = {
   mintMid: '#20D6A055',
 };
 
+// Apresenta valores em reais com separadores usados no Brasil.
 export const formatBRL = (valor) => {
   const [int, dec] = Math.abs(valor).toFixed(2).split('.');
   const milhar = int.replace(/\B(?=(\d{3})+(?!\d))/g, '.');

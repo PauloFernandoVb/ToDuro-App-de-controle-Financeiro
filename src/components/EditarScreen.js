@@ -7,6 +7,7 @@ import { useFinance } from '../context/FinanceContext';
 
 export function EditarScreen({ navigation, route }) {
   const { transacoes, atualizar } = useFinance();
+  // O ID recebido pela rota identifica o registro que será carregado no formulário.
   const t = transacoes.find((x) => x.id === route.params?.id);
 
   if (!t) {
