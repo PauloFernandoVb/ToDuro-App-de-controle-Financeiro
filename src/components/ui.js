@@ -8,7 +8,7 @@ import { colors } from '../theme';
 export function Screen({ children, footer, scroll = true }) {
   // Compartilha área segura, ajuste do teclado e rolagem entre as telas.
   return (
-    <SafeAreaView style={s.safe}>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         {scroll ? (
           <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">

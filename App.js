@@ -16,6 +16,7 @@ import { colors } from './src/theme.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import TabNavigator from './src/components/TabNavigator.js';
 
 const MyStack = createNativeStackNavigator();
 
@@ -43,6 +44,9 @@ export default function App() {
         >
           <MyStack.Screen name="Login" component={LoginScreen} />
           <MyStack.Screen name="Cadastro" component={CadastroScreen} />
+
+          <MyStack.Screen name="MainTabs" component={TabNavigator} />
+
           <MyStack.Screen name="Dashboard" component={DashboardScreen} />
           <MyStack.Screen name="Historico" component={HistoricoScreen} />
           <MyStack.Screen name="Receita" component={ReceitaScreen} />

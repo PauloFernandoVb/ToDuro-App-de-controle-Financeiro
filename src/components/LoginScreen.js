@@ -64,7 +64,8 @@ export function LoginScreen({ navigation }) {
       }
 
       setUsuario({ nome: perfil.nome.trim().split(' ')[0], email: perfil.email.trim() });
-      navigation.reset({ index: 0, routes: [{ name: 'Dashboard' }] });
+      // navigation.reset({ index: 0, routes: [{ name: 'Dashboard' }] });
+      navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
     } catch (erro) {
       setMensagem(
         autenticado

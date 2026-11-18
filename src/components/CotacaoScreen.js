@@ -67,7 +67,7 @@ export function CotacaoScreen({ navigation }) {
   const atualizar = () => setSolicitacao((atual) => atual + 1);
 
   return (
-    <Screen footer={<BottomNav navigation={navigation} active="Cotacao" />}>
+    <Screen>
       <Header title="Cotação de moedas" subtitle="Converta valores entre moedas" />
       <Banner type="info" message="Cotações de referência diárias fornecidas pela Frankfurter." />
 

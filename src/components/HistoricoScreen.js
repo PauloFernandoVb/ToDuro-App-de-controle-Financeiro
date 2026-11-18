@@ -45,7 +45,7 @@ export function HistoricoScreen({ navigation }) {
 
   // A lista permite consultar, editar e excluir cada movimentação.
   return (
-    <Screen footer={<BottomNav navigation={navigation} active="Historico" />}>
+    <Screen>
       <Header
         title="Histórico"
         subtitle={

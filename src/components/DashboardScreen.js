@@ -59,7 +59,7 @@ export function DashboardScreen({ navigation, route }) {
 
   // Os valores e a atividade recente vêm do contexto sincronizado com o Firebase.
   return (
-    <Screen footer={<BottomNav navigation={navigation} active="Dashboard" />}>
+    <Screen>
       <View style={st.topo}>
         <View style={{ flex: 1 }}>
           <Text style={st.ola}>Olá, {usuario.nome} </Text>
