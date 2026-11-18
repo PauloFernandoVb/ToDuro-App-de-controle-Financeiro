@@ -32,6 +32,18 @@ export function MovimentoForm({
   const [erroSalvar, setErroSalvar] = useState('');
   const envioEmAndamento = useRef(false);
 
+  const resetarPara = (rota, params) => {
+    navigation.reset({
+      index: 0,
+      routes: [{
+        name: rota,
+        params: rota === 'MainTabs'
+          ? { screen: 'Dashboard', params }
+          : params,
+      }],
+    });
+  };
+
   // Valida os campos e evita enviar duas gravações ao mesmo tempo.
   const salvar = async () => {
     if (envioEmAndamento.current) return;
@@ -59,13 +71,10 @@ export function MovimentoForm({
         obs: obs.trim(),
       });
       if (rotaAposSalvar) {
-        navigation.reset({
-          index: 0,
-          routes: [{
-            name: rotaAposSalvar,
-            params: { mensagemSucesso, tipoMensagem: 'success' },
-          }],
-        });
+        resetarPara(
+          rotaAposSalvar === 'Dashboard' ? 'MainTabs' : rotaAposSalvar,
+          { mensagemSucesso, tipoMensagem: 'success' }
+        );
       } else {
         Alert.alert('Tudo certo ✓', mensagemSucesso, [
           { text: 'OK', onPress: () => navigation.goBack() },
@@ -92,15 +101,9 @@ export function MovimentoForm({
         subtitle={subtitulo}
         onBack={() => {
           if (rotaAoCancelar) {
-            navigation.reset({
-              index: 0,
-              routes: [{
-                name: rotaAoCancelar,
-                params: {
-                  mensagemSucesso: 'Lançamento cancelado.',
-                  tipoMensagem: 'info',
-                },
-              }],
+            resetarPara('MainTabs', {
+              mensagemSucesso: 'Lançamento cancelado.',
+              tipoMensagem: 'info',
             });
           } else {
             navigation.goBack();
@@ -147,15 +150,9 @@ export function MovimentoForm({
         variant="outline"
         onPress={() => {
           if (rotaAoCancelar) {
-            navigation.reset({
-              index: 0,
-              routes: [{
-                name: rotaAoCancelar,
-                params: {
-                  mensagemSucesso: 'Lançamento cancelado.',
-                  tipoMensagem: 'info',
-                },
-              }],
+            resetarPara('MainTabs', {
+              mensagemSucesso: 'Lançamento cancelado.',
+              tipoMensagem: 'info',
             });
           } else {
             navigation.goBack();

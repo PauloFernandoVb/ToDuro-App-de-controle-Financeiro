@@ -108,31 +108,6 @@ export function Banner({ type = 'info', message }) {
   );
 }
 
-export function BottomNav({ navigation, active }) {
-  const itens = [
-    { rota: 'Dashboard', icone: '⌂', nome: 'Início' },
-    { rota: 'Historico', icone: '☰', nome: 'Histórico' },
-    { rota: 'Cotacao', icone: '$', nome: 'Cotação' },
-  ];
-  return (
-    <View style={s.nav}>
-      {itens.map((i) => {
-        const ativo = i.rota === active;
-        // Limpa a pilha ao trocar de seção pela navegação inferior.
-        return (
-          <TouchableOpacity
-            key={i.rota}
-            style={s.navItem}
-            onPress={() => !ativo && navigation.reset({ index: 0, routes: [{ name: i.rota }] })}
-          >
-            <Text style={[s.navIcon, ativo && { color: colors.mint }]}>{i.icone}</Text>
-            <Text style={[s.navTxt, ativo && { color: colors.mint, fontWeight: '700' }]}>{i.nome}</Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
 
 export const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.midnight },

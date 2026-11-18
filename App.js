@@ -47,12 +47,9 @@ export default function App() {
 
           <MyStack.Screen name="MainTabs" component={TabNavigator} />
 
-          <MyStack.Screen name="Dashboard" component={DashboardScreen} />
-          <MyStack.Screen name="Historico" component={HistoricoScreen} />
-          <MyStack.Screen name="Receita" component={ReceitaScreen} />
+          <MyStack.Screen name="Receita" component={ReceitaScreen} /> 
           <MyStack.Screen name="Despesa" component={DespesaScreen} />
           <MyStack.Screen name="Editar" component={EditarScreen} />
-          <MyStack.Screen name="Cotacao" component={CotacaoScreen} />
           <MyStack.Screen name="GerenciarCategorias" component={GerenciarCategoriasScreen} />
         </MyStack.Navigator>
       </NavigationContainer>
