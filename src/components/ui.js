@@ -5,7 +5,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme';
 
-export function Screen({ children, footer, scroll = true }) {
+export function Screen({ children, scroll = true }) {
   // Compartilha área segura, ajuste do teclado e rolagem entre as telas.
   return (
     <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
@@ -17,7 +17,6 @@ export function Screen({ children, footer, scroll = true }) {
         ) : (
           <View style={s.content}>{children}</View>
         )}
-        {footer}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
